@@ -1,0 +1,8 @@
+Script started on 2016年05月17日 (週二) 03時21分05秒
+]0;H34016144@2016cpp: ~/lab5[01;32mH34016144@2016cpp[00m:[01;34m~/lab5[00m$ AK[K[Kmake
+g++ -c HugeInt.cpp
+g++ -c main.cpp
+g++ -o hugeint HugeInt.o main.o
+]0;H34016144@2016cpp: ~/lab5[01;32mH34016144@2016cpp[00m:[01;34m~/lab5[00m$ exit
+
+Script done on 2016年05月17日 (週二) 03時23分54秒
