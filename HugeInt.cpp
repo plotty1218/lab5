@@ -8,6 +8,7 @@ HugeInt::HugeInt(){
 	for(int i=0;i<arrsize;++i)
 		int_arr[i]=0;
 	minus=false;
+	minus2=false;
 }
 
 HugeInt::HugeInt(int size,int num){
@@ -16,6 +17,7 @@ HugeInt::HugeInt(int size,int num){
 	for(int i=0;i<arrsize;++i)
 		int_arr[i]=num;
 	minus=false;
+	minus2=false;
 }
 
 HugeInt::HugeInt(int a){
@@ -24,6 +26,7 @@ HugeInt::HugeInt(int a){
 	int_arr[0] = a/100000;
 	int_arr[1] = a%100000;
 	minus=false;
+	minus2=false;
 }
 
 HugeInt::HugeInt(string str){ 
@@ -51,6 +54,7 @@ HugeInt::HugeInt(string str){
 		is >> int_arr[i];
 	}
 	minus=false;
+	minus2=false;
 }
 
 HugeInt& HugeInt::operator=(const HugeInt &huge){
@@ -109,7 +113,7 @@ HugeInt HugeInt::operator-(const HugeInt& huge){
 		return a;
 	}else if(arrsize<huge.arrsize){
 		diff=huge.arrsize-arrsize;	
-		minus=true;
+		b.minus=true;
 		for(int i=0;i<diff;++i){
 			b.int_arr[i]=huge.int_arr[i];
 		}
@@ -117,7 +121,7 @@ HugeInt HugeInt::operator-(const HugeInt& huge){
 			b.int_arr[i]=huge.int_arr[i]-int_arr[j];
 		}
 		return b;
-	}else{
+	}else if(arrsize==huge.arrsize){
 		if(int_arr[0]<huge.int_arr[0]){
 			bigger=false;
 		}else if(int_arr[0]==huge.int_arr[0] && int_arr[1]<huge.int_arr[1]){
@@ -126,30 +130,30 @@ HugeInt HugeInt::operator-(const HugeInt& huge){
 			bigger=false;
 		}else if(int_arr[0]==huge.int_arr[0] && int_arr[1]==huge.int_arr[1] && int_arr[2]==huge.int_arr[2] && int_arr[3]<huge.int_arr[3]){
 			bigger=false;
-		}else if(int_arr[0]==huge.int_arr[0] && int_arr[1]==huge.int_arr[1] && int_arr[2]==huge.int_arr[2] && int_arr[3]==huge.int_arr[3] && int_arr[4]<huge.int_arr		[4]){
+		}else if(int_arr[0]==huge.int_arr[0] && int_arr[1]==huge.int_arr[1] && int_arr[2]==huge.int_arr[2] && int_arr[3]==huge.int_arr[3] && int_arr[4]<huge.int_arr[4]){
 			bigger=false;
 		}
-	if(bigger==true){
-		for(int i=0;i<arrsize;++i){
-			a.int_arr[i]=int_arr[i]-huge.int_arr[i];
-		}
-		return a;
-	}else{
-		for(int i=0;i<huge.arrsize;++i){
-			b.int_arr[i]=huge.int_arr[i]-int_arr[i];
-		}
-		b.int_arr[0]=(-1)*(b.int_arr[0]);
-		return b;
-	}
-	
-	}
 
+		if(bigger==true){
+			for(int i=0;i<arrsize;++i){
+				a.int_arr[i]=int_arr[i]-huge.int_arr[i];
+			}
+			return a;
+		}else if(bigger==false){
+			for(int i=0;i<huge.arrsize;++i){
+				b.int_arr[i]=huge.int_arr[i]-int_arr[i];
+			}
+			b.minus2==true;
+			return b;
+		}
+	}
 }
 
 
 ostream &operator<<(ostream &out, HugeInt& huge){
 	string str_arr[huge.arrsize];
-	
+	int r;
+	huge.answer="";
 	for(int i=1;i<huge.arrsize;++i){
 			if(huge.int_arr[i]>99999){
 				huge.int_arr[i-1]+=huge.int_arr[i]/100000;
@@ -158,26 +162,48 @@ ostream &operator<<(ostream &out, HugeInt& huge){
 		
 			if(huge.int_arr[i]<0){
 				huge.int_arr[i-1]--;
-				huge.int_arr[i]+100000;
+				huge.int_arr[i]=huge.int_arr[i]+100000;
 			}
 	}
+	if(huge.minus2==true){
+		for(r=0;r<huge.arrsize;++r){
+			if(huge.int_arr[r]!=0)
+				break;
+		}
+		huge.int_arr[r]=(-1)*(huge.int_arr[r]);
+	}
+
 	for(int i=0;i<huge.arrsize;++i){
 		stringstream ss;
 		ss << huge.int_arr[i];
 		str_arr[i] = ss.str(); 
 	}
-	for(int i=1;i<huge.arrsize;++i){
-		if(str_arr[i].size()==4){
-			str_arr[i]="0"+str_arr[i];
-		}else if(str_arr[i].size()==3){
-			str_arr[i]="00"+str_arr[i];
-		}else if(str_arr[i].size()==2){
-			str_arr[i]="000"+str_arr[i];
-		}else if(str_arr[i].size()==1){
-			str_arr[i]="0000"+str_arr[i];
+	if(huge.minus2==false){
+		for(int i=1;i<huge.arrsize;++i){
+			if(str_arr[i].size()==4){
+				str_arr[i]="0"+str_arr[i];
+			}else if(str_arr[i].size()==3){
+				str_arr[i]="00"+str_arr[i];
+			}else if(str_arr[i].size()==2){
+				str_arr[i]="000"+str_arr[i];
+			}else if(str_arr[i].size()==1){
+				str_arr[i]="0000"+str_arr[i];
+			}
+		}
+	}else if(huge.minus2==true){
+		for(int i=huge.arrsize-1;i>r;--i){
+			if(str_arr[i].size()==4){
+				str_arr[i]="0"+str_arr[i];
+			}else if(str_arr[i].size()==3){
+				str_arr[i]="00"+str_arr[i];
+			}else if(str_arr[i].size()==2){
+				str_arr[i]="000"+str_arr[i];
+			}else if(str_arr[i].size()==1){
+				str_arr[i]="0000"+str_arr[i];
+			}
 		}
 	}
-	huge.answer="";
+
 	if(huge.minus==true){
 		huge.answer="-";
 	}
@@ -185,6 +211,7 @@ ostream &operator<<(ostream &out, HugeInt& huge){
 	for(int i=0;i<huge.arrsize;++i){
 		huge.answer+=str_arr[i];
 	}
+	
 	out << huge.answer;
 
 	return out;

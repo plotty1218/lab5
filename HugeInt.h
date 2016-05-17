@@ -19,5 +19,6 @@ private:
 	int arrsize;
 	int *int_arr;
 	bool minus;
+	bool minus2;
 	string answer;
 };
